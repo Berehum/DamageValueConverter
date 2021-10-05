@@ -64,4 +64,5 @@ public class MainApplication extends JFrame {
     public JsonUtils getJsonUtils() {
         return jsonUtils;
     }
+
 }

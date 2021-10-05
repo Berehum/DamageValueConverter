@@ -3,6 +3,8 @@ package io.github.berehum.damagevalueconverter.panels;
 import io.github.berehum.damagevalueconverter.MainApplication;
 
 import javax.swing.*;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import java.awt.*;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.StringSelection;
@@ -62,21 +64,30 @@ public class FileListPanel extends JPanel implements ActionListener {
         add(removeButton);
     }
 
+    public boolean addPath(String path) {
+        File file = new File(path);
+        if (!file.exists() || !file.getName().endsWith(".json")) return false;
+        DefaultListModel<String> listModel = (DefaultListModel<String>) list.getModel();
+        if (listModel.contains(path)) return false;
+        listModel.addElement(path);
+        return true;
+    }
+
 
     @Override
     public void actionPerformed(ActionEvent e) {
         if (removeButton.equals(e.getSource())) {
-            if (!(list.getSelectedIndex() >= 0)) return;
             DefaultListModel<String> listModel = (DefaultListModel<String>) list.getModel();
-            listModel.removeElementAt(list.getSelectedIndex());
+            int removedValues = 0;
+            for (int index : list.getSelectedIndices()) {
+                listModel.removeElementAt(index-removedValues);
+                removedValues++;
+            }
         }
+
         if (addButton.equals(e.getSource())) {
             String path = application.getFileSelectorPanel().textField.getText();
-            File file = new File(path);
-            if (!file.exists()) return;
-            DefaultListModel<String> listModel = (DefaultListModel<String>) list.getModel();
-            if (listModel.contains(path)) return;
-            listModel.addElement(path);
+            if (!addPath(path)) return;
             application.getFileSelectorPanel().textField.setText(null);
         }
     }
