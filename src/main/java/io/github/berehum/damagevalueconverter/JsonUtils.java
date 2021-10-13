@@ -25,13 +25,16 @@ public class JsonUtils {
         this.application = application;
     }
 
-
     public synchronized int convert(String path) {
         return convert(new File(path));
     }
 
     public synchronized int convert(File file) {
         if (!file.exists() || file.isDirectory()) return FILE_ERROR;
+
+        final String prefix = file.getName() + " | ";
+
+        application.log(prefix+ "Started converting");
 
         Map<?, ?> map;
 
@@ -43,6 +46,8 @@ public class JsonUtils {
 
         if (map == null) return JSON_ERROR;
 
+        //Change Json Values
+
         int modelData = 1;
 
         try {
@@ -50,7 +55,6 @@ public class JsonUtils {
 
             if (list == null) return JSON_ERROR;
             for (Object o : list) {
-                application.log(o.toString());
                 if (!(o instanceof LinkedTreeMap<?, ?>)) continue;
                 LinkedTreeMap<?, ?> overridesMap = (LinkedTreeMap<?, ?>) o;
 
@@ -62,36 +66,35 @@ public class JsonUtils {
                     predicateMap.remove("damage");
                     predicateMap.put("custom_model_data", modelData);
                     modelData++;
-                    application.log(o.toString());
                 }
             }
         } catch (Exception e) {
             return JSON_ERROR;
         }
 
-        //debug
-        for (Map.Entry<?, ?> entry : map.entrySet()) {
-            System.out.println(entry.getKey() + "=" + entry.getValue());
-        }
+        //--
 
-        //Change Json Values
+        //Writing to file
 
-        File convertedFile = new File(file.getParentFile().getAbsolutePath() + "/exported/" + file.getName());
+        File convertedFile = new File(file.getParentFile().getAbsolutePath() + "/converted/" + file.getName());
         convertedFile.getParentFile().mkdirs();
-        application.log("Creating: " + convertedFile.getPath());
+        application.log(prefix+"Creating: " + convertedFile.getPath());
         
         try {
             if (!convertedFile.exists()) convertedFile.createNewFile();
             FileWriter writer = new FileWriter(convertedFile);
             gson.toJson(map, writer);
             writer.close();
+            application.log(prefix+"Finished converting");
         } catch (IOException e) {
-            application.log("Error whilst creating: " + convertedFile.getAbsolutePath());
-            application.log("ERROR: " + e.getMessage());
+            application.log(prefix+"Error whilst creating: " + convertedFile.getAbsolutePath());
+            application.log(prefix+"ERROR: " + e.getMessage());
             return FILE_ERROR;
         }
         
         return SUCCEEDED;
+
+        //
     }
 
 }

@@ -3,8 +3,6 @@ package io.github.berehum.damagevalueconverter.panels;
 import io.github.berehum.damagevalueconverter.MainApplication;
 
 import javax.swing.*;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
 import java.awt.*;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.StringSelection;

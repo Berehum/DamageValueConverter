@@ -77,7 +77,7 @@ public class FileSelectorPanel extends JPanel implements ActionListener {
             convertButton.setText("Converting..");
             converting = true;
             JsonUtils jsonUtils = application.getJsonUtils();
-            DefaultListModel<String> model = (DefaultListModel<String>) application.getFileListPanel().list.getModel();
+            DefaultListModel<String> model = (DefaultListModel<String>) list.getModel();
             List<String> newList = new ArrayList<>();
             for (int i = 0; i < model.getSize(); i++) {
                 String path = model.get(i);

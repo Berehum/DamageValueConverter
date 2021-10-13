@@ -1,56 +1,38 @@
 package io.github.berehum.damagevalueconverter;
 
-import io.github.berehum.damagevalueconverter.panels.FileListPanel;
-import io.github.berehum.damagevalueconverter.panels.FileSelectorPanel;
-import io.github.berehum.damagevalueconverter.panels.LogPanel;
+import io.github.berehum.damagevalueconverter.panels.*;
 
 import javax.swing.*;
 import java.awt.*;
 
 public class MainApplication extends JFrame {
 
-    private LogPanel logPanel;
-    private FileListPanel fileListPanel;
-    private FileSelectorPanel fileSelectorPanel;
+    private MainPanel mainPanel;
     private JsonUtils jsonUtils;
 
     public MainApplication() {
+        jsonUtils = new JsonUtils(this);
         initUI();
     }
 
     private void initUI() {
-        jsonUtils = new JsonUtils(this);
-        logPanel = new LogPanel();
-        fileListPanel = new FileListPanel(this);
-        fileSelectorPanel = new FileSelectorPanel(this);
-
-        getContentPane().add(BorderLayout.NORTH, logPanel);
-        getContentPane().add(BorderLayout.CENTER, fileListPanel);
-        getContentPane().add(BorderLayout.SOUTH, fileSelectorPanel);
+        add(mainPanel);
+        getContentPane().add(BorderLayout.NORTH, new LogPanel());
+        getContentPane().add(BorderLayout.CENTER, new FileListPanel(this));
+        getContentPane().add(BorderLayout.SOUTH, new FileSelectorPanel(this));
 
         setTitle("Damage Value Converter");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
-        setSize(new Dimension(600, 600));
-        setResizable(false);
+        //setSize(new Dimension(600, 600));
+        pack();
         log("Started program");
 
     }
 
+
     public void log(String msg) {
-        logPanel.log(msg);
-    }
-
-    public LogPanel getLogPanel() {
-        return logPanel;
-    }
-
-    public FileListPanel getFileListPanel() {
-        return fileListPanel;
-    }
-
-    public FileSelectorPanel getFileSelectorPanel() {
-        return fileSelectorPanel;
+        getLogPanel().log(msg);
     }
 
     public static void main(String[] args) {
