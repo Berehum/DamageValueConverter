@@ -9,6 +9,7 @@ public class MainApplication extends JFrame {
 
     private MainPanel mainPanel;
     private JsonUtils jsonUtils;
+    private Dimension dimension;
 
     public MainApplication() {
         jsonUtils = new JsonUtils(this);
@@ -16,27 +17,26 @@ public class MainApplication extends JFrame {
     }
 
     private void initUI() {
+        mainPanel = new MainPanel(jsonUtils);
         add(mainPanel);
-        getContentPane().add(BorderLayout.NORTH, new LogPanel());
-        getContentPane().add(BorderLayout.CENTER, new FileListPanel(this));
-        getContentPane().add(BorderLayout.SOUTH, new FileSelectorPanel(this));
 
         setTitle("Damage Value Converter");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
-        //setSize(new Dimension(600, 600));
         pack();
+        dimension = getSize();
+        setMinimumSize(dimension);
         log("Started program");
 
     }
 
 
     public void log(String msg) {
-        getLogPanel().log(msg);
+        mainPanel.log(msg);
     }
 
     public static void main(String[] args) {
-        EventQueue.invokeLater(() -> {
+        SwingUtilities.invokeLater(() -> {
             MainApplication mainApplication = new MainApplication();
             mainApplication.setVisible(true);
         });

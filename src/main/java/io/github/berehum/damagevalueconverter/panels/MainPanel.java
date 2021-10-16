@@ -1,7 +1,6 @@
 package io.github.berehum.damagevalueconverter.panels;
 
 import io.github.berehum.damagevalueconverter.JsonUtils;
-import io.github.berehum.damagevalueconverter.MainApplication;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -24,8 +23,10 @@ public class MainPanel extends JPanel implements ActionListener {
 
     private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss");
 
+    private final JsonUtils jsonUtils;
+
     private JPopupMenu popup;
-    protected JFileChooser fileChooser;
+    private JFileChooser fileChooser;
 
     private JTextArea console;
     private JList<String> list;
@@ -39,27 +40,39 @@ public class MainPanel extends JPanel implements ActionListener {
 
     private boolean converting = false;
 
-    public MainPanel() {
+    public MainPanel(JsonUtils jsonUtils) {
+        this.jsonUtils = jsonUtils;
         init();
     }
 
     private void init() {
+
         setLayout(new GridBagLayout());
 
-        GridBagConstraints constraints = new GridBagConstraints();
+        GridBagConstraints c = new GridBagConstraints();
 
         //
-        constraints.fill = GridBagConstraints.HORIZONTAL;
+        c.weightx = 0.5;
+        c.weighty = 0.25;
+        c.fill = GridBagConstraints.HORIZONTAL;
+        c.anchor = GridBagConstraints.PAGE_START;
+        c.gridwidth = 4;
 
-        console = new JTextArea(20, 50);
+        console = new JTextArea(20, 0);
         console.setEditable(false);
         console.setLineWrap(true);
         DefaultCaret caret = (DefaultCaret) console.getCaret();
         caret.setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
-        add(new JScrollPane(console), constraints);
+        add(new JScrollPane(console), c);
 
         //
-
+        c = new GridBagConstraints();
+        c.weightx = 0.5;
+        c.weighty = 0.5;
+        c.gridy = 1;
+        c.gridx = 0;
+        c.anchor = GridBagConstraints.CENTER;
+        c.fill = GridBagConstraints.BOTH;
 
         list = new JList<>(new DefaultListModel<>());
         list.addMouseListener(new MouseAdapter() {
@@ -70,41 +83,82 @@ public class MainPanel extends JPanel implements ActionListener {
             }
         });
 
-        add(new JScrollPane(list));
+        add(new JScrollPane(list), c);
 
         //
+
+        c = new GridBagConstraints();
+        c.weightx = 0.5;
+        c.weighty = 0.5;
+        c.gridy = 2;
+        c.gridx = 0;
+        c.anchor = GridBagConstraints.FIRST_LINE_START;
 
         addButton = new JButton("Add");
         addButton.addActionListener(this);
-        add(addButton);
+        add(addButton, c);
 
         //
+        c = new GridBagConstraints();
+        c.weightx = 0.5;
+        c.weighty = 0.5;
+        c.gridy = 2;
+        c.gridx = 0;
+        c.anchor = GridBagConstraints.FIRST_LINE_END;
 
         removeButton = new JButton("Remove");
         removeButton.addActionListener(this);
-        add(removeButton);
+        add(removeButton, c);
 
         //
+
+        c = new GridBagConstraints();
+        c.weightx = 0.5;
+        c.weighty = 0.5;
+        c.gridy = 1;
+        c.gridx = 1;
+        c.anchor = GridBagConstraints.PAGE_END;
 
         JLabel label = new JLabel("Path to .json file");
-        add(label);
+        add(label, c);
 
         //
+
+        c = new GridBagConstraints();
+        c.weightx = 0.5;
+        c.weighty = 0.5;
+        c.gridy = 2;
+        c.gridx = 1;
+        c.anchor = GridBagConstraints.PAGE_START;
 
         pathField = new JTextField(20);
-        add(pathField);
+        add(pathField, c);
 
         //
+
+        c = new GridBagConstraints();
+        c.weightx = 0.5;
+        c.weighty = 0.5;
+        c.gridy = 2;
+        c.gridx = 2;
+        c.anchor = GridBagConstraints.PAGE_START;
 
         selectFileButton = new JButton("Select File(s)");
         selectFileButton.addActionListener(this);
-        add(selectFileButton);
+        add(selectFileButton, c);
 
         //
 
+        c = new GridBagConstraints();
+        c.weightx = 1;
+        c.weighty = 1;
+        c.gridy = 2;
+        c.gridx = 3;
+        c.anchor = GridBagConstraints.PAGE_START;
+
         convertButton = new JButton("Convert File(s)");
         convertButton.addActionListener(this);
-        add(convertButton);
+        add(convertButton, c);
 
         // Invisible objects
 
@@ -172,7 +226,7 @@ public class MainPanel extends JPanel implements ActionListener {
             for (File file : fileChooser.getSelectedFiles()) {
                 if (!file.isFile()) continue;
                 if (!addPath(file.getAbsolutePath())) continue;
-                application.log("You added the file: " + file.getName());
+                log("You added the file: " + file.getName());
             }
 
         }
@@ -182,7 +236,6 @@ public class MainPanel extends JPanel implements ActionListener {
             String buttonText = convertButton.getText();
             convertButton.setText("Converting..");
             converting = true;
-            JsonUtils jsonUtils = application.getJsonUtils();
             DefaultListModel<String> model = (DefaultListModel<String>) list.getModel();
             List<String> newList = new ArrayList<>();
             for (int i = 0; i < model.getSize(); i++) {
