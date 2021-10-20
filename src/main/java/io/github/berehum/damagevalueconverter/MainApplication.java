@@ -5,7 +5,7 @@ import io.github.berehum.damagevalueconverter.panels.*;
 import javax.swing.*;
 import java.awt.*;
 
-public class MainApplication extends JFrame {
+public class MainApplication extends JFrame implements Logger{
 
     private MainPanel mainPanel;
     private JsonUtils jsonUtils;

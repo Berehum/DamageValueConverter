@@ -3,6 +3,7 @@ package io.github.berehum.damagevalueconverter;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.internal.LinkedTreeMap;
+import io.github.berehum.damagevalueconverter.panels.Logger;
 
 import java.io.File;
 import java.io.FileReader;
@@ -19,10 +20,10 @@ public class JsonUtils {
     public static final int FILE_ERROR = 2;
 
     private final Gson gson = new GsonBuilder().setPrettyPrinting().create();
-    private final MainApplication application;
+    private final Logger logger;
 
-    public JsonUtils(MainApplication application) {
-        this.application = application;
+    public JsonUtils(Logger logger) {
+        this.logger = logger;
     }
 
     public synchronized int convert(String path) {
@@ -34,7 +35,7 @@ public class JsonUtils {
 
         final String prefix = file.getName() + " | ";
 
-        application.log(prefix+ "Started converting");
+        logger.log(prefix+ "Started converting");
 
         Map<?, ?> map;
 
@@ -78,17 +79,17 @@ public class JsonUtils {
 
         File convertedFile = new File(file.getParentFile().getAbsolutePath() + "/converted/" + file.getName());
         convertedFile.getParentFile().mkdirs();
-        application.log(prefix+"Creating: " + convertedFile.getPath());
+        logger.log(prefix+"Creating: " + convertedFile.getPath());
         
         try {
             if (!convertedFile.exists()) convertedFile.createNewFile();
             FileWriter writer = new FileWriter(convertedFile);
             gson.toJson(map, writer);
             writer.close();
-            application.log(prefix+"Finished converting");
+            logger.log(prefix+"Finished converting");
         } catch (IOException e) {
-            application.log(prefix+"Error whilst creating: " + convertedFile.getAbsolutePath());
-            application.log(prefix+"ERROR: " + e.getMessage());
+            logger.log(prefix+"Error whilst creating: " + convertedFile.getAbsolutePath());
+            logger.log(prefix+"ERROR: " + e.getMessage());
             return FILE_ERROR;
         }
         

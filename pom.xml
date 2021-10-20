@@ -6,7 +6,7 @@
 
     <groupId>io.github.berehum</groupId>
     <artifactId>DamageValueConverter</artifactId>
-    <version>0.1</version>
+    <version>1.0</version>
 
     <properties>
         <maven.compiler.source>15</maven.compiler.source>
