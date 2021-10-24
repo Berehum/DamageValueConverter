@@ -1,9 +1,9 @@
-package io.github.berehum.damagevalueconverter;
+package io.github.berehum.damagevalueconverter.utils;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.internal.LinkedTreeMap;
-import io.github.berehum.damagevalueconverter.panels.Logger;
+import io.github.berehum.damagevalueconverter.models.Logger;
 
 import java.io.File;
 import java.io.FileReader;
