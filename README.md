@@ -1,4 +1,5 @@
-#Damage-Value Converter
+# CANCELLED -> new repository is written in C#
+# Damage-Value Converter
 A simple program to convert damage-values to custom model data.
-#Instructions
+# Instructions
 Check the GitHub wiki page for instructions for this program.
